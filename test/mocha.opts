@@ -1,0 +1,6 @@
+--require test/test-plugins.js
+--require test/test-helper.js
+--compilers jsx:test/compiler.js
+--recursive
+--reporter spec
+--timeout 30000
