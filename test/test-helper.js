@@ -20,3 +20,5 @@ resetDom();
 //Check this repo:
 //https://github.com/zilverline/react-tap-event-plugin
 require("react-tap-event-plugin")();
+
+global.createStubReactComponent = require("./create-stub-react-component");
