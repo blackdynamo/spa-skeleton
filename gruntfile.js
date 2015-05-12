@@ -11,7 +11,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask("default", ["build", "concurrent"]);
     grunt.registerTask("build", ["clean", "jshint", "browserify", "less", "stylus", "copy", "concat"]);
-    grunt.registerTask("release", ["build", "removelogging", "uglify", "cssmin"]);
+    grunt.registerTask("release", ["build", "uglify", "cssmin"]);
     grunt.registerTask("package", ["release", "compress:package"]);
 
     grunt.initConfig({
@@ -130,14 +130,6 @@ module.exports = function (grunt) {
 
             vendor: {
                 files: {"<%= dist.dir %>/<%= dist.css.vendor %>": ["<%= dist.dir %>/<%= dist.css.vendor %>"]}
-            }
-        },
-
-        //Removes all console.log from javascript
-        removelogging: {
-            app: {
-                src: "<%= dist.dir %>/<%= dist.js.app %>",
-                dest: "<%= dist.dir %>/<%= dist.js.app %>"
             }
         },
 
