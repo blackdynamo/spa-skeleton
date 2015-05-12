@@ -87,7 +87,7 @@ module.exports = function (grunt) {
         copy: {
             images: {
                 files: [
-                    {dest: "<%= dist.dir %>/images/", cwd: "src/images/", src: "**", expand: true}
+                    {dest: "<%= dist.dir %>/img/", cwd: "src/images/", src: "**", expand: true}
                 ]
             },
             fonts: {
