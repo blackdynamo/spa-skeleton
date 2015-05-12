@@ -156,26 +156,22 @@ module.exports = function (grunt) {
         watch: {
             code: {
                 files: ["src/app/**/*.js", "src/app/**/*.jsx"],
-                tasks: ["browserify:app", "jshint"],
-                options: {livereload: true}
+                tasks: ["browserify:app", "jshint"]
             },
 
             images: {
                 files: ["src/images/**/*"],
-                tasks: ["copy:images"],
-                options: {livereload: true}
+                tasks: ["copy:images"]
             },
 
             index: {
                 files: ["src/index.html"],
-                tasks: ["concat"],
-                options: {livereload: true}
+                tasks: ["concat"]
             },
 
             stylus: {
                 files: ["src/styles/**/*.styl"],
-                tasks: ["styl"],
-                options: {livereload: true}
+                tasks: ["styl"]
             }
         },
 
@@ -187,7 +183,6 @@ module.exports = function (grunt) {
                     base: "dist",
                     hostname: "localhost",
                     debug: true,
-                    livereload: true,
                     open: {appName: process.env.BROWSER}
                 }
             }
