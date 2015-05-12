@@ -68,10 +68,7 @@ module.exports = function (grunt) {
         less: {
             vendor: {
                 files: {
-                    "<%= dist.dir %>/<%= dist.css.vendor %>": [
-                        "node_modules/bootstrap/less/bootstrap.less",
-                        "node_modules/font-awesome/less/font-awesome.less"
-                    ]
+                    "<%= dist.dir %>/<%= dist.css.vendor %>": "src/styles/vendor.less"
                 }
             }
         },
@@ -146,7 +143,7 @@ module.exports = function (grunt) {
         },
 
         watch: {
-            code: {
+            app: {
                 files: ["src/app/**/*.js", "src/app/**/*.jsx"],
                 tasks: ["browserify:app", "jshint"]
             },
@@ -159,6 +156,11 @@ module.exports = function (grunt) {
             index: {
                 files: ["src/index.html"],
                 tasks: ["concat"]
+            },
+
+            less: {
+                files: ["src/styles/vendor.less"],
+                tasks: ["less:vendor"]
             },
 
             stylus: {
