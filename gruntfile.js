@@ -163,7 +163,7 @@ module.exports = function (grunt) {
 
             stylus: {
                 files: ["src/styles/**/*.styl"],
-                tasks: ["styl"]
+                tasks: ["stylus"]
             }
         },
 
