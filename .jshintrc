@@ -89,8 +89,6 @@
 
   // Custom Globals
   "globals"       : {
-    "appRoot"     : true,     //Global app root
-    "appRequire"  : true,     //Custom require to easily reference app modules
     "sinon"       : true,      //Sinon mocks
     "expect"      : true,     //Chai
     "resetDom"    : true      //Helper for tests to reset the jsdom
