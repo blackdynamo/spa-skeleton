@@ -19,10 +19,10 @@
   },
   "scripts": {
     "postinstall": "node -e \"var srcpath='../src/app'; var dstpath='node_modules/app';var fs=require('fs'); fs.exists(dstpath,function(exists){if(!exists){fs.symlinkSync(srcpath, dstpath,'dir');}});\"",
-    "build": "rm -rf node_modules && npm install && ./node_modules/grunt-cli/bin/grunt build",
-    "release": "rm -rf node_modules && npm install && ./node_modules/grunt-cli/bin/grunt release",
-    "start": "./node_modules/grunt-cli/bin/grunt",
-    "test": "./node_modules/mocha/bin/mocha test"
+    "build": "rm -rf node_modules && npm install && grunt build",
+    "release": "rm -rf node_modules && npm install && grunt release",
+    "start": "grunt",
+    "test": "mocha test"
   },
   "browserify": {
     "transform": [
