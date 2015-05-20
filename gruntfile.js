@@ -1,6 +1,7 @@
 "use strict";
 
-var _ = require("underscore");
+var _ = require("underscore"),
+    config = require("config");
 
 module.exports = function (grunt) {
     var pkg = grunt.file.readJSON("package.json");
@@ -48,7 +49,7 @@ module.exports = function (grunt) {
                 dest: "<%= dist.dir %>/<%= dist.js.app %>",
                 options: {
                     transform: [
-                        ["envify", grunt.file.readJSON("config/" + (grunt.option("env") || "default") + ".json")],
+                        ["envify", config],
                         require("grunt-react").browserify
                     ],
 

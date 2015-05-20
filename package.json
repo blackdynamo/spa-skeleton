@@ -37,6 +37,7 @@
   "devDependencies": {
     "browserify": "^10.1.2",
     "chai": "^2.3.0",
+    "config": "^1.13.0",
     "envify": "^3.4.0",
     "grunt": "^0.4.5",
     "grunt-browserify": "^3.8.0",
