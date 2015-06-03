@@ -1,9 +1,10 @@
 "use strict";
 
-var React = require("react");
+var React = require("react"),
+    app = require("app/application");
 
-module.exports = function(container){
-    var Page = React.createFactory(require("app/pages").Root);
+module.exports = function(){
+    var Page = require("app/pages").Root;
 
-    React.render(new Page(), container);
+    React.render(<Page />, app.container);
 };

@@ -22,6 +22,6 @@ module.exports = React.createClass({
     },
 
     render: function () {
-        return <button className={ this.getClasses() } onTouchTap={ this.onClick }>{ this.props.value }</button>;
+        return <button className={ this.getClasses() } onClick={ this.onClick }>{ this.props.value }</button>;
     }
 });

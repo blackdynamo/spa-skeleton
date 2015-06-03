@@ -1,31 +1,26 @@
 "use strict";
 
+var app = require("app/application");
+
 (function () {
     document.title = process.env.APP_TITLE;
 
-    initializeReact();
-    initializeReactTapEvent();
-    initializeBackbone();
-    initializeMarionette();
-
-    require("app/application").start();
-})();
-
-function initializeReact() {
     window.React = require("react");
-}
+    require("backbone").$ = require("jquery");
 
-function initializeReactTapEvent() {
-    //https://github.com/zilverline/react-tap-event-plugin
-    require("react-tap-event-plugin")();
-}
+    app.addInitializer(function initializeMockjax() {
+        var commands = require("app/commands");
+        commands.registerWith(app);
+    });
 
-function initializeBackbone() {
-    var Backbone = require("backbone");
+    app.addInitializer(function initializeMockjax() {
+        this.container = document.getElementById("app");
+    });
 
-    Backbone.$ = Backbone.$ || require("jquery");
-}
+    app.addInitializer(function initializeRouter() {
+        var Router = require("./router");
+        this.router = new Router();
+    });
 
-function initializeMarionette() {
-    require("backbone.marionette");
-}
+    app.start();
+})();

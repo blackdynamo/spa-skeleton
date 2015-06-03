@@ -15,10 +15,4 @@ global.resetDom = function(){
 // Perhaps a bug in React?
 resetDom();
 
-//Needed for onTouchTap
-//Can go away when react 1.0 release
-//Check this repo:
-//https://github.com/zilverline/react-tap-event-plugin
-require("react-tap-event-plugin")();
-
 global.createStubReactComponent = require("./create-stub-react-component");

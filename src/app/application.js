@@ -1,28 +1,32 @@
 "use strict";
 
-var Backbone = require("backbone");
+var _ = require("underscore"),
+    Backbone = require("backbone"),
+    Wreqr = require("backbone.wreqr"),
+    Callbacks = require("app/callbacks");
 
-var Application = Backbone.Marionette.Application.extend({
-    getContainer: function () {
-        return document.getElementById("app");
-    },
+_.extend(Application.prototype, Backbone.Events);
 
-    navigate: function (fragment) {
-        this.router.navigate(fragment, {trigger: true});
-    }
-});
+function Application() {
+    this._initCallbacks = new Callbacks();
+    this.commands = new Wreqr.Commands();
+}
+
+Application.prototype.execute = function () {
+    this.commands.execute.apply(this.commands, arguments);
+};
+
+Application.prototype.addInitializer = function (initializer) {
+    this._initCallbacks.add(initializer);
+};
+
+Application.prototype.start = function (options) {
+    this.trigger('before:start', options);
+    this._initCallbacks.run(options, this);
+    this.trigger('start', options);
+};
 
 var app = new Application();
-
-app.addInitializer(function initializeMockjax() {
-    var commands = require("app/commands");
-    commands.registerWith(app);
-});
-
-app.addInitializer(function initializeRouter() {
-    var Router = require("./router");
-    this.router = new Router();
-});
 
 app.on("start", function () {
     Backbone.history.start();

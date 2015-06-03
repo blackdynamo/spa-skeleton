@@ -40,7 +40,7 @@ describe("components.button", function () {
         var onClick = this.sandbox.stub();
         var component = TestUtils.renderIntoDocument(<Button value="Test button" type="danger" onClick={ onClick } />);
 
-        TestUtils.Simulate.touchTap(component.getDOMNode());
+        TestUtils.Simulate.click(component.getDOMNode());
 
         expect(onClick).to.have.been.calledWithExactly();
     });
