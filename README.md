@@ -33,10 +33,12 @@ Files & Directories that are watched and ignored are configured in the [gruntfil
 
 ## Getting started
 
-    git clone git@github.com:blackdynamo/spa-skeleton.git <appname>
-    cd <appname>
-    npm install
-    npm start
+```bash
+$ git clone git@github.com:blackdynamo/spa-skeleton.git <appname>
+$ cd <appname>
+$ npm run build
+$ npm start
+```
 
 ## Testing
 
