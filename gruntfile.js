@@ -1,23 +1,28 @@
 "use strict";
 
-var _ = require("underscore"),
-    config = require("config");
+var _ = require("lodash"),
+    url = require("url"),
+    proxy = require("proxy-middleware"),
+    config = require("config"),
+    serveStatic = require("serve-static");
 
 module.exports = function (grunt) {
     var pkg = grunt.file.readJSON("package.json");
+    var version = grunt.option("packageVersion") || pkg.version;
     var dependencies = _.without(_.keys(pkg.dependencies), "font-awesome");
 
     require("time-grunt")(grunt);
     require("load-grunt-tasks")(grunt);
 
     grunt.registerTask("default", ["build", "concurrent"]);
-    grunt.registerTask("build", ["clean", "jshint", "browserify", "less", "stylus", "copy", "concat"]);
+    grunt.registerTask("build", ["clean", "jshint", "browserify", "exorcise", "less", "stylus", "copy:fonts", "concat"]);
     grunt.registerTask("release", ["build", "uglify", "cssmin"]);
-    grunt.registerTask("package", ["release", "compress:package"]);
+    grunt.registerTask("package", ["copy:deploy"]);
 
     grunt.initConfig({
-        dist: {
-            dir: "dist",
+        dist: "dist",
+        build: {
+            dir: "build",
             js: {
                 app: "js/app.js",
                 vendor: "js/vendor.js"
@@ -29,31 +34,40 @@ module.exports = function (grunt) {
         },
 
         pkg: pkg,
-        version: "<%= pkg.name %>-<%= pkg.version %>",
+        version: version,
         banner: "/**\n * <%= version %>\n */\n",
 
-        clean: ["<%= dist.dir %>/*"],
+        clean: ["<%= build.dir %>/*", "<%= dist %>/*"],
 
         browserify: {
             vendor: {
                 src: [],
-                dest: "<%= dist.dir %>/<%= dist.js.vendor %>",
-                options: {
-                    transform: [require("grunt-react").browserify],
-                    require: dependencies
-                }
+                dest: "<%= build.dir %>/<%= build.js.vendor %>",
+                options: {require: dependencies}
             },
 
             app: {
                 src: "src/app/initialize.js",
-                dest: "<%= dist.dir %>/<%= dist.js.app %>",
+                dest: "<%= build.dir %>/<%= build.js.app %>",
                 options: {
-                    transform: [
-                        ["envify", config],
-                        require("grunt-react").browserify
-                    ],
+                    transform: [["envify", config], ["babelify", {"presets": ["es2015", "react"]}]],
 
-                    external: dependencies
+                    browserifyOptions: {
+                        debug: true,
+                        fullPaths: false
+                    },
+
+                    external: dependencies,
+                    watch: true
+                }
+            }
+        },
+
+        exorcise: {
+            bundle: {
+                options: {},
+                files: {
+                    "<%= build.dir %>/<%= build.js.app %>.map": ["<%= build.dir %>/<%= build.js.app %>"]
                 }
             }
         },
@@ -61,7 +75,7 @@ module.exports = function (grunt) {
         concat: {
             index: {
                 src: ["src/index.html"],
-                dest: "<%= dist.dir %>/index.html",
+                dest: "<%= build.dir %>/index.html",
                 options: {process: true}
             }
         },
@@ -69,7 +83,7 @@ module.exports = function (grunt) {
         less: {
             vendor: {
                 files: {
-                    "<%= dist.dir %>/<%= dist.css.vendor %>": "src/styles/vendor.less"
+                    "<%= build.dir %>/<%= build.css.vendor %>": "src/styles/vendor.less"
                 }
             }
         },
@@ -77,43 +91,65 @@ module.exports = function (grunt) {
         stylus: {
             compile: {
                 files: {
-                    "<%= dist.dir %>/<%= dist.css.app %>": "src/styles/app.styl"
+                    "<%= build.dir %>/<%= build.css.app %>": "src/styles/app.styl"
                 }
             }
         },
 
         copy: {
-            images: {
+            data: {
                 files: [
-                    {dest: "<%= dist.dir %>/img/", cwd: "src/images/", src: "**", expand: true}
+                    {dest: "<%= build.dir %>/data/", cwd: "src/data/", src: "**", expand: true}
                 ]
             },
+
+            images: {
+                files: [
+                    {dest: "<%= build.dir %>/img/", cwd: "src/images/", src: "**", expand: true}
+                ]
+            },
+
             fonts: {
                 files: [
-                    {dest: "<%= dist.dir %>/fonts/", cwd: "node_modules/font-awesome/fonts/", src: "**", expand: true}
+                    {dest: "<%= build.dir %>/fonts/", cwd: "node_modules/font-awesome/fonts/", src: "**", expand: true},
+                    {dest: "<%= build.dir %>/fonts/", cwd: "node_modules/react-widgets/dist/fonts/", src: "**", expand: true}
+                ]
+            },
+
+            pdfs: {
+                files: [
+                    {dest: "<%= build.dir %>/pdf/", cwd: "src/pdfs/", src: "**", expand: true}
+                ]
+            },
+
+            deploy: {
+                files: [
+                    {dest: "<%= dist %>/<%= build.dir %>", cwd: "build", src: "**/*", expand: true},
+                    {dest: "<%= dist %>", cwd: "deployment", src: "**/*", expand: true}
                 ]
             }
         },
 
         jshint: {
-            files: ["gruntfile.js", "src/app/**/*.js", "src/app/**/*.jsx"],
+            files: ["src/app/**/*.js", "src/app/**/*.jsx"],
             options: {
-                jshintrc: true
+                jshintrc: true,
+                reporter: require("jshint-stylish")
             }
         },
 
         uglify: {
-            options: {
-                sourceMap: true
-            },
-
             app: {
-                options: {banner: "<%= banner %>"},
-                files: {"<%= dist.dir %>/<%= dist.js.app %>": ["<%= dist.dir %>/<%= dist.js.app %>"]}
+                options: {
+                    banner: "<%= banner %>",
+                    sourceMap: true,
+                    sourceMapIn: "<%= build.dir %>/<%= build.js.app %>.map"
+                },
+                files: {"<%= build.dir %>/<%= build.js.app %>": ["<%= build.dir %>/<%= build.js.app %>"]}
             },
 
             vendor: {
-                files: {"<%= dist.dir %>/<%= dist.js.vendor %>": ["<%= dist.dir %>/<%= dist.js.vendor %>"]}
+                files: {"<%= build.dir %>/<%= build.js.vendor %>": ["<%= build.dir %>/<%= build.js.vendor %>"]}
             }
         },
 
@@ -123,37 +159,15 @@ module.exports = function (grunt) {
             },
 
             app: {
-                files: {"<%= dist.dir %>/<%= dist.css.app %>": ["<%= dist.dir %>/<%= dist.css.app %>"]}
+                files: {"<%= build.dir %>/<%= build.css.app %>": ["<%= build.dir %>/<%= build.css.app %>"]}
             },
 
             vendor: {
-                files: {"<%= dist.dir %>/<%= dist.css.vendor %>": ["<%= dist.dir %>/<%= dist.css.vendor %>"]}
-            }
-        },
-
-        compress: {
-            package: {
-                options: {
-                    mode: "tgz",
-                    archive: "<%= pkg.name %>.tar.gz"
-                },
-                files: [
-                    {expand: true, cwd: "dist/", src: ["**"], dest: "."}
-                ]
+                files: {"<%= build.dir %>/<%= build.css.vendor %>": ["<%= build.dir %>/<%= build.css.vendor %>"]}
             }
         },
 
         watch: {
-            app: {
-                files: ["src/app/**/*.js", "src/app/**/*.jsx"],
-                tasks: ["browserify:app", "jshint"]
-            },
-
-            images: {
-                files: ["src/images/**/*"],
-                tasks: ["copy:images"]
-            },
-
             index: {
                 files: ["src/index.html"],
                 tasks: ["concat"]
@@ -175,21 +189,25 @@ module.exports = function (grunt) {
                 options: {
                     keepalive: true,
                     port: 3030,
-                    base: "dist",
+                    base: "<%= build.dir %>",
                     hostname: "localhost",
                     debug: true,
-                    open: {appName: process.env.BROWSER}
+                    middleware: function (connect, options) {
+                        return _.map(config.proxies, function (config) {
+                            var options = url.parse(config.url);
+                            options.route = config.route;
+                            return proxy(options);
+                        }).concat([serveStatic(options.base[0])]);
+                    }
                 }
             }
         },
 
         concurrent: {
-            tasks: ["connect", "watch"],
+            tasks: ["watch", "connect"],
             options: {
                 logConcurrentOutput: true
             }
         }
-
     });
 };
-

@@ -1,3 +1,9 @@
 {
-  "APP_TITLE": "Simple SPA Skeleton"
+  "appName": "SPA Skeleton",
+  "proxies": [
+    {
+      "route": "/api",
+      "url": "http://localhost:3031"
+    }
+  ]
 }

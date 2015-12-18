@@ -1,4 +1,30 @@
+// nib is a powerful lib for stylus that provides cross-browser css3 mixins.
+// No more vendor prefixes. http://visionmedia.github.com/nib/
 @import "nib"
 
-*
-  outline none
+// DO NOT OVERRIDE ANY BOOTSTRAP CLASSES!!
+
+// CSS Architectural Goals
+// - Make it Predictable
+// - Make it Reusable
+// - Make it Maintainable
+// - Make it Scalable
+
+// Best Practices
+// - Be Intentional (Keep child and type selectors to a minimum)
+// - Separate Your Concerns (Position vs Look and Feel)
+// - Namespace Your Classes
+// - Extend Components with Modifier Classes
+
+// In general, components should define how they look, but not their layout or position. Be careful when you see
+// properties like background, color, and font in the same rule as position, width, height, and margin.
+
+button.btn
+  outline: none !important
+
+  &.btn-default:active
+  &.btn-default:focus
+    color: #333
+    background-color: #fff
+    border-color: #ccc
+    text-decoration none

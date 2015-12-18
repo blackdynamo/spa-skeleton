@@ -1,18 +1,18 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en">
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <meta name="description" content="">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <link rel="stylesheet" type="text/css" href="<%= dist.css.vendor %>">
-  <link rel="stylesheet" type="text/css" href="<%= dist.css.app %>">
-  <base href="/">
+    <title>Barcode Manager</title>
+    <link rel="stylesheet" type="text/css" href="<%= build.css.vendor %>">
+    <link rel="stylesheet" type="text/css" href="<%= build.css.app %>">
 </head>
 <body>
-  <div id="app"></div>
-  <script src="<%= dist.js.vendor %>"></script>
-  <script src="<%= dist.js.app %>"></script>
+<div id="container"></div>
+<div id="modal"></div>
+<script src="<%= build.js.vendor %>"></script>
+<script src="<%= build.js.app %>"></script>
 </body>
 </html>

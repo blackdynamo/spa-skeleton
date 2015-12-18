@@ -1,13 +1,1 @@
-{
-  "description": "This package.json is simply for the browserify transforms when using symlinks",
-  "browserify": {
-    "transform": [
-      [
-        "reactify",
-        {
-          "es6": true
-        }
-      ]
-    ]
-  }
-}
+{}

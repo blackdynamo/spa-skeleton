@@ -1,26 +1,16 @@
 "use strict";
 
-var app = require("app/application");
+document.addEventListener("DOMContentLoaded", () => {
+    document.title = process.env.appName;
 
-(function () {
-    document.title = process.env.APP_TITLE;
+    window.jQuery = window.$ = require("jquery");
+    window.Promise = require("bluebird");
+    require("bootstrap");
 
-    window.React = require("react");
-    require("backbone").$ = require("jquery");
+    var app = require("app");
 
-    app.addInitializer(function initializeMockjax() {
-        var commands = require("app/commands");
-        commands.registerWith(app);
-    });
-
-    app.addInitializer(function initializeMockjax() {
-        this.container = document.getElementById("app");
-    });
-
-    app.addInitializer(function initializeRouter() {
-        var Router = require("./router");
-        this.router = new Router();
-    });
-
+    app.container = document.getElementById("container");
+    app.modal = document.getElementById("modal");
+    app.store = require("app/store");
     app.start();
-})();
+});
